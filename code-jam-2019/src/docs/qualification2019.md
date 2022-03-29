@@ -14,7 +14,7 @@
 
 |            | Foregone Solution | You Can Go Your Own Way | Cyptopangrams | Dat Bae |
 | ---        | ---               | ---                     | ---           | ---     |
-| Sample     | yes               | no                      | no            | no      |
-| Test Set 1 | yes               | no                      | no            | no      |
-| Test Set 2 | yes               | no                      | no            | no      |
-| Test Set 3 | yes               | no                      | -             | -       |
+| Sample     | yes               | yes                     | no            | no      |
+| Test Set 1 | yes               | yes                     | no            | no      |
+| Test Set 2 | yes               | yes                     | no            | no      |
+| Test Set 3 | yes               | yes                     | -             | -       |
