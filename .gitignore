@@ -31,3 +31,6 @@ hs_err_pid*
 .classpath
 .project
 .settings/
+
+code-jam-helper/src/main/resources/input/Solution.java
+code-jam-helper/src/main/resources/output/Solution.java
