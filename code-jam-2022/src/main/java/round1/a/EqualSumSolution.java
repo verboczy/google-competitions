@@ -1,7 +1,6 @@
 package round1.a;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EqualSumSolution {
     private static final Scanner scanner = new Scanner(System.in);
@@ -45,45 +44,26 @@ public class EqualSumSolution {
 
         final long halfSum = sum / 2;
 
-//        final Map<Long, List<Long>> sums = new HashMap<>();
-//        sums.put(0L, Collections.emptyList());
-
         Collections.sort(numbers);
 
-
-//        for (Long number : numbers) {
-//            final Map<Long, List<Long>> dummySums = new HashMap<>();
-//
-//            for (Map.Entry<Long, List<Long>> entry : sums.entrySet()) {
-//                final long newValue = number + entry.getKey();
-//                if (!sums.containsKey(newValue)) {
-//                    final List<Long> subSums = new ArrayList<>(entry.getValue());
-//                    subSums.add(number);
-//                    dummySums.put(newValue, subSums);
-//                }
-//
-//                if (newValue == halfSum) {
-//                    final String result = dummySums.get(newValue).stream().map(Object::toString).collect(Collectors.joining(" "));
-//                    System.out.println(result);
-//                    return;
-//                }
-//            }
-//
-//            sums.putAll(dummySums);
-//        }
         final Map<Long, Sum> sums = new HashMap<>();
-        sums.put(0L, new Sum(null, 0L));
+
         for (final Long number : numbers) {
             final Map<Long, Sum> dummySums = new HashMap<>();
+            if (sums.isEmpty()) {
+                dummySums.put(number, new Sum(number, null, null));
+            }
+
             for (Map.Entry<Long, Sum> entry : sums.entrySet()) {
-                final long newValue = number + entry.getKey();
-                if (!sums.containsKey(newValue)) {
-                    dummySums.put(newValue, new Sum(entry.getValue(), number));
+                final Long previousSum = entry.getKey();
+                final long newSum = number + previousSum;
+                if (!sums.containsKey(newSum)) {
+                    final Sum previousSubSum = entry.getValue();
+                    dummySums.put(newSum, new Sum(newSum, previousSubSum, new Sum(number, null, null)));
                 }
 
-                if (newValue == halfSum) {
-                    final String result = String.format("%d %s", number, entry.getValue().print());
-                    System.out.println(result);
+                if (newSum == halfSum) {
+                    System.out.println(dummySums.get(newSum).print());
                     return;
                 }
             }
@@ -93,24 +73,22 @@ public class EqualSumSolution {
     }
 
     public static class Sum {
-        private final long sum;
-        private final Sum previousSubSum;
+        private final long value;
+        private final Sum left;
+        private final Sum right;
 
-        public Sum(final Sum previousSubSum, final long newElement) {
-            if (previousSubSum == null) {
-                this.sum = newElement;
-            } else {
-                this.sum = previousSubSum.sum + newElement;
-            }
-            this.previousSubSum = previousSubSum;
+        public Sum(final long value, final Sum left, final Sum right) {
+            this.value = value;
+            this.left = left;
+            this.right = right;
         }
 
         public String print() {
-            if (previousSubSum == null) {
-                return String.format("%d", sum);
-            } else {
-                return String.format("%d %s", sum, previousSubSum.print());
+            if (left == null || right == null) {
+                return String.valueOf(value);
             }
+
+            return String.format("%s %s", left.print(), right.print());
         }
     }
 }
