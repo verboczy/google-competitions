@@ -1,6 +1,7 @@
 package round1.a;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EqualSumSolution {
     private static final Scanner scanner = new Scanner(System.in);
@@ -15,80 +16,97 @@ public class EqualSumSolution {
     public static void handleTestCase() {
         // Phase 1
         final int N = scanner.nextInt();
+        if (N == -1) {
+            throw new IllegalStateException("Something went wrong, the judge responded with -1.");
+        }
 
         // Phase 2
-        long sum = 0;
-        final List<Long> numbers = new ArrayList<>(2 * N);
-
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 1; i <= N; i++) {
-            sum += i;
-            numbers.add((long) i);
-            sb.append(i).append(" ");
+        final List<Long> ownNumbers = new ArrayList<>(N);
+        final StringBuilder numbersResponse = new StringBuilder();
+        for (long number = 0; number < N; number++) {
+            final long value;
+            if (number < 30) {
+                value = (long) Math.pow(2.0, number);
+            } else {
+                value = getRandomValue(ownNumbers);
+            }
+            numbersResponse.append(value).append(" ");
+            ownNumbers.add(value);
         }
-        System.out.println(sb.toString().trim());
+        System.out.println(numbersResponse);
 
         // Phase 3
+        final Partition partition1 = new Partition(new LinkedList<>());
+        final Partition partition2 = new Partition(new LinkedList<>());
+
         for (int i = 1; i <= N; i++) {
             final int number = scanner.nextInt();
-            if (number == -1) {
-                throw new IllegalStateException("Something went wrong, the judge responded with -1.");
-            }
-            sum += number;
-            numbers.add((long) number);
+            addToPartition(partition1, partition2, number);
         }
 
-        if (sum % 2 != 0) {
-            throw new IllegalStateException("Something went wrong, the sum is not even.");
+        for (final Long number : ownNumbers) {
+            addToPartition(partition1, partition2, number);
         }
 
-        final long halfSum = sum / 2;
-
-        Collections.sort(numbers);
-
-        final Map<Long, Sum> sums = new HashMap<>();
-
-        for (final Long number : numbers) {
-            final Map<Long, Sum> dummySums = new HashMap<>();
-            if (sums.isEmpty()) {
-                dummySums.put(number, new Sum(number, null, null));
+        while (partition1.getSum() != partition2.getSum()) {
+            if (partition1.getSum() > partition2.getSum()) {
+                final long minElement = partition1.removeFirstElement();
+                partition2.addElement(minElement);
+            } else {
+                final long minElement = partition2.removeFirstElement();
+                partition1.addElement(minElement);
             }
+        }
 
-            for (Map.Entry<Long, Sum> entry : sums.entrySet()) {
-                final Long previousSum = entry.getKey();
-                final long newSum = number + previousSum;
-                if (!sums.containsKey(newSum)) {
-                    final Sum previousSubSum = entry.getValue();
-                    dummySums.put(newSum, new Sum(newSum, previousSubSum, new Sum(number, null, null)));
-                }
+        System.out.println(partition1.print());
+    }
 
-                if (newSum == halfSum) {
-                    System.out.println(dummySums.get(newSum).print());
-                    return;
-                }
-            }
-
-            sums.putAll(dummySums);
+    private static void addToPartition(final Partition partition1, final Partition partition2, final long number) {
+        if (partition1.getSum() <= partition2.getSum()) {
+            partition1.addElement(number);
+        } else {
+            partition2.addElement(number);
         }
     }
 
-    public static class Sum {
-        private final long value;
-        private final Sum left;
-        private final Sum right;
+    public static long getRandomValue(final List<Long> list) {
+        final Random random = new Random();
+        long randomValue = Math.abs(random.nextLong()) % 1_000_000_000L;
+        while (list.contains(randomValue)) {
+            randomValue = Math.abs(random.nextLong()) % 1_000_000_000L;
+        }
+        return randomValue;
+    }
 
-        public Sum(final long value, final Sum left, final Sum right) {
-            this.value = value;
-            this.left = left;
-            this.right = right;
+    public static class Partition {
+        long sum;
+        final List<Long> elements;
+
+        public Partition(List<Long> elements) {
+            this.sum = 0L;
+            this.elements = elements;
+        }
+
+        public void addElement(final long element) {
+            sum += element;
+            elements.add(element);
+            Collections.sort(elements);
+        }
+
+        public long removeFirstElement() {
+            final int firstIndex = 0;
+            final Long firstElement = elements.get(firstIndex);
+            sum -= firstElement;
+            elements.remove(firstIndex);
+            return firstElement;
+        }
+
+        public long getSum() {
+            return sum;
         }
 
         public String print() {
-            if (left == null || right == null) {
-                return String.valueOf(value);
-            }
-
-            return String.format("%s %s", left.print(), right.print());
+            return elements.stream().map(Objects::toString).collect(Collectors.joining(" "));
         }
     }
 }
