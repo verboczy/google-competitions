@@ -23,7 +23,7 @@ public class PancakeDequeTest extends TestBase {
                 Arguments.of("Sample", BASE_DIR + "sample_test_set_1/sample_ts1_input.txt", BASE_DIR + "sample_test_set_1/sample_ts1_output.txt"),
                 Arguments.of("Test set 1", BASE_DIR + "test_set_1/ts1_input.txt", BASE_DIR + "test_set_1/ts1_output.txt"),
                 Arguments.of("Test set 2", BASE_DIR + "test_set_2/ts2_input.txt", BASE_DIR + "test_set_2/ts2_output.txt"),
-                Arguments.of("Test set 2", BASE_DIR + "test_set_3/ts3_input.txt", BASE_DIR + "test_set_3/ts3_output.txt")
+                Arguments.of("Test set 3", BASE_DIR + "test_set_3/ts3_input.txt", BASE_DIR + "test_set_3/ts3_output.txt")
         );
     }
 
