@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.verboczy</groupId>
-    <artifactId>google-code-jam</artifactId>
+    <artifactId>google-competitions</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>code-jam-helper</module>
+        <module>competition-helper</module>
         <module>code-jam-2019</module>
         <module>code-jam-2020</module>
         <module>code-jam-2021</module>
