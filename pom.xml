@@ -14,6 +14,7 @@
         <module>code-jam-2020</module>
         <module>code-jam-2021</module>
         <module>code-jam-2022</module>
+        <module>kick-start-2022</module>
     </modules>
 
     <properties>
